@@ -1,40 +1,55 @@
 #include <iostream>
+#include <vector>
 #include <cmath>
-#include <valarray>
 
 using namespace std;
 
 int main() {
-	double alpha, burningSpeed, rocketMass, fuelMass, earthMass, gasesSpeed; 
-	cin >> alpha >> burningSpeed >> rocketMass >> fuelMass >> earthMass >> gasesSpeed;
-	double currentSpeedX, currentSpeedY;
-	double currentSpeed = 0;
-	double x0 = 0;
-	double y0 = 0;
-	double G;
+	long double PI = 3.1415;
+	long double alpha, burningSpeed, rocketMass, fuelMass, gasesSpeed;
+	cout << "Enter angle, gases burning speed, rocket mass, fuel mass, gases speed" << endl;
+	cin >> alpha >> burningSpeed >> rocketMass >> fuelMass >> gasesSpeed;
+	alpha = alpha * PI / 180;
+	long double currentSpeedX = 0;
+	long double currentSpeedY = 0;
+	long double acceleration = 0;
+	long double currentSpeed = 0;
+	long double x0 = 0;
+	long  double y0 = 0;
+	const long double G = 6.67 * pow(10, -11);
+	const int R = 6371302;
+	long double earthMass = 5.97 * pow(10, 24);
+	long double g;
 
-	while (fuelMass > 0) {
-		if (x0 != 0) {
-			G = (6.67 * pow(10, -11) * earthMass) / x0;
-			cout << G;
+	while (y0 >= 0) {
+		g = (G * earthMass) / pow(x0 + R, 2);
+		if (fuelMass > 0) {
+			acceleration = burningSpeed * gasesSpeed / (rocketMass + fuelMass);
 		}
 		else {
-			G = 0;
+			acceleration = 0;
 		}
-		double prevSpeed = currentSpeed;
-		currentSpeed = burningSpeed * gasesSpeed / (rocketMass + fuelMass);
-		currentSpeedX = cos(alpha) * currentSpeed;
-		currentSpeedY = sin(alpha) * currentSpeed;
+		//cout << acceleration << " - acceleration" << endl;
+		currentSpeedX = currentSpeedX + cos(alpha) * acceleration;
+		currentSpeedY = currentSpeedY + sin(alpha) * acceleration - g;
+		//cout << currentSpeedX << " - currentSpeedX" << endl;
+		//cout << currentSpeedY << " - currentSpeedY" << endl;
+		currentSpeed = sqrt(pow(currentSpeedX, 2) + pow(currentSpeedY, 2));
 
-		x0 = x0 + currentSpeedX * 1 + cos(alpha) * (currentSpeed - prevSpeed) / 2;
-		y0 = y0 + currentSpeedY * 1 + (sin(alpha) * (currentSpeed - prevSpeed) - G) / 2;
+		x0 = x0 + currentSpeedX * 1 + (cos(alpha) * acceleration) / 2;
+		y0 = y0 + currentSpeedY * 1 + (sin(alpha) * acceleration - g) / 2;
 
 		alpha = atan(currentSpeedY / currentSpeedX);
-
-		cout << "xCoordinate " << x0 << " yCoordinate " << y0 << " currentSpeed " << currentSpeed << " fuelMass " << fuelMass << endl;
+		//cout << alpha * 180 / PI << " - alpha" << endl;
 
 		fuelMass -= burningSpeed;
+		if (fuelMass < 0) {
+			fuelMass = 0;
+		}
+		//cout << "xCoordinate " << x0 << " yCoordinate " << y0 << " currentSpeed " << currentSpeed << " fuelMass " << fuelMass << endl;
+
 	}
+
 
 	return 0;
 }
