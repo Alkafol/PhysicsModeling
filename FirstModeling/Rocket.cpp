@@ -22,7 +22,7 @@ int main() {
 	long double g;
 
 	while (y0 >= 0) {
-		g = (G * earthMass) / pow(x0 + R, 2);
+		g = (G * earthMass) / pow(y0 + R, 2);
 		if (fuelMass > 0) {
 			acceleration = burningSpeed * gasesSpeed / (rocketMass + fuelMass);
 		}
@@ -36,20 +36,16 @@ int main() {
 		//cout << currentSpeedY << " - currentSpeedY" << endl;
 		currentSpeed = sqrt(pow(currentSpeedX, 2) + pow(currentSpeedY, 2));
 
-		x0 = x0 + currentSpeedX * 1 + (cos(alpha) * acceleration) / 2;
-		y0 = y0 + currentSpeedY * 1 + (sin(alpha) * acceleration - g) / 2;
-
-		alpha = atan(currentSpeedY / currentSpeedX);
-		//cout << alpha * 180 / PI << " - alpha" << endl;
+		x0 = x0 + currentSpeedX;
+		y0 = y0 + currentSpeedY;
 
 		fuelMass -= burningSpeed;
 		if (fuelMass < 0) {
 			fuelMass = 0;
 		}
-		//cout << "xCoordinate " << x0 << " yCoordinate " << y0 << " currentSpeed " << currentSpeed << " fuelMass " << fuelMass << endl;
+		cout << "xCoordinate " << x0 << " yCoordinate " << y0 << " currentSpeed " << currentSpeed << " fuelMass " << fuelMass << endl;
 
 	}
-
 
 	return 0;
 }
